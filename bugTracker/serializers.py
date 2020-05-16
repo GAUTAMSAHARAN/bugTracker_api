@@ -21,7 +21,7 @@ class IssueSerializers(serializers.ModelSerializer):
 class ProjectSerializers(serializers.ModelSerializer):
     class Meta:
         model = models.Project
-        fields = ['title', 'desc', 'gitLink','upload_time']
+        fields = ['title', 'desc', 'gitLink','upload_time', 'creater']
 
 class UserSerializers(serializers.ModelSerializer):
     profileImage = ImageSerializers(read_only=True)
@@ -39,13 +39,14 @@ class HomeSerializers(serializers.ModelSerializer):
 class ProjectCategorySerializers(serializers.ModelSerializer):
     class Meta:
         model = models.Project
-        fields = ['title', 'desc', 'gitLink', 'memebers']
+        fields = ['title', 'desc', 'gitLink', 'memebers', 'creater']
 
 class ProjectShowSerializers(serializers.ModelSerializer):
     issues = IssueSerializers(many=True, read_only=True)
+    memebers = UserSerializers(many=True, read_only=True)
     class Meta:
         model = models.Project
-        fields = ['title', 'desc', 'gitLink', 'issues']
+        fields = ['title', 'desc', 'gitLink', 'issues', 'memebers']
 
 class ProfileSerializers(serializers.ModelSerializer):
     projects = ProjectSerializers(many=True, read_only=True)

@@ -2,13 +2,13 @@ from django.db import models
 from django.core.validators import MinLengthValidator
 from djrichtextfield.models import RichTextField
 import datetime
+from django.utils import timezone
+from django.contrib.auth.models import AbstractUser
 # Create your models here.
 
 
 #user model
-class User(models.Model):
-    username = models.CharField(max_length=10)
-    fullname = models.CharField(max_length=30)
+class User(AbstractUser):
     mobile = models.CharField(max_length=12, validators=[MinLengthValidator(12)])
     boss = models.BooleanField(default=False)#admin at the site level
     gitProfile = models.URLField(
@@ -36,7 +36,8 @@ class Project(models.Model):
         max_length=300,
         blank=True
     )
-    upload_time = datetime.datetime.now()
+    upload_time = models.DateTimeField(auto_now_add = True)
+    creater = models.ForeignKey(User, related_name='myprojects', on_delete=models.CASCADE)
 
     memebers = models.ManyToManyField("User", related_name="projects")
 
@@ -67,7 +68,7 @@ class Comment(models.Model):
     upload_time = datetime.datetime.now()
 
     issues = models.ForeignKey(Issue, related_name = 'comments', on_delete=models.CASCADE)
-    user = models.ForeignKey(User, related_name = 'Comments', on_delete=models.CASCADE)
+    creater = models.ForeignKey(User, related_name = 'Comments', on_delete=models.CASCADE)
 
 #image models
 class Image(models.Model):

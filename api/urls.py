@@ -21,4 +21,6 @@ from rest_framework import routers
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('bugTracker.urls')),
-    path('djrichtextfield/', include('djrichtextfield.urls')),]
+    path('djrichtextfield/', include('djrichtextfield.urls')),
+    path('api-auth/', include('rest_framework.urls')),
+]
