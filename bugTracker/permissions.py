@@ -3,7 +3,6 @@ from rest_framework import permissions
 
 
 class IsTeamMember(permissions.BasePermission):
-
     def has_object_permission(self, request, view, obj):
         project = obj
         members = project.memebers.all()
@@ -17,7 +16,6 @@ class IsTeamMember(permissions.BasePermission):
                 return False
 
 class IsOwner(permissions.BasePermission):
-
     def has_object_permission(self, request, view, obj):
         model = obj
         creater = model.creater

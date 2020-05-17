@@ -8,7 +8,7 @@ from django_filters import rest_framework as filters
 from rest_framework.filters import SearchFilter, OrderingFilter
 from django.http import HttpResponse, JsonResponse,Http404
 from rest_framework.permissions import IsAuthenticated, AllowAny  # <-- Here
-from bugTracker import permissions
+from bugTracker.permissions import IsOwner, IsTeamMember
 # from rest_framework.authentication import TokenAuthentication, SessionAuthentication  
 
 # Create your views here.
@@ -20,10 +20,17 @@ class IssueViewSet(viewsets.ModelViewSet):
 
     permission_classes_by_action = {'create': [AllowAny],
                                     'list': [AllowAny],
-                                    'update': [permissions.IsOwner],
-                                    'destroy': [permissions.IsOwner],
-                                    'retrieve': [AllowAny]}
-
+                                    'update': [IsOwner],
+                                    'destroy': [IsOwner],
+                                    'retrieve': [AllowAny],
+                                    'default': [IsOwner]}
+                        
+    def get_permissions(self):
+        try: 
+            return [permission() for permission in self.permission_classes_by_action[self.action]]
+        except KeyError as e: 
+            return [permission() for permission in self.permission_classes_by_action['default']]
+    
     @action(methods=['get', ], detail=True, url_path='comments', url_name='comments')
     def get_comments(self, request, pk):
      try: 
@@ -45,9 +52,14 @@ class ProjectViewSet(viewsets.ModelViewSet):
   
     permission_classes_by_action = {'create': [AllowAny],
                                     'list': [AllowAny],
-                                    'update': [permissions.IsTeamMember],
-                                    'destroy': [permissions.IsTeamMember],
-                                    'retrieve': [AllowAny]}
+                                    'update': [IsTeamMember],
+                                    'destroy': [IsTeamMember],
+                                    'retrieve': [IsTeamMember]}
+    def get_permissions(self):
+        try: 
+            return [permission() for permission in self.permission_classes_by_action[self.action]]
+        except KeyError as e: 
+            return [permission() for permission in self.permission_classes_by_action['default']]
 
     @action(methods=['get', ], detail=True, url_path='issues', url_name='issues')   
     def get_issues(self, request, pk):
