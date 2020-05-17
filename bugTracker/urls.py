@@ -1,17 +1,19 @@
-from django.urls import path
+from django.urls import path, include
 from rest_framework.urlpatterns import format_suffix_patterns
 from bugTracker import views
 from django.conf.urls.static import static
 from django.conf import settings
+from rest_framework.routers import DefaultRouter
+
+router = DefaultRouter()
+router.register(r'issues', views.IssueViewSet)
+router.register(r'projects', views.ProjectViewSet)
+router.register(r'users', views.UserViewSet)
+
 
 urlpatterns = [
-  path('home/', views.Home.as_view()),
-  path('projects/', views.ProjectList.as_view()),
-  path('projects/<int:pk>/', views.ProjectDetail.as_view()),
-  path('users/<int:pk>/', views.Profile.as_view()),
-  path('issues/<int:pk>/', views.IssueDetail.as_view()),
-  path('users/',views.UserList.as_view()),
+    path('', include(router.urls)),
 ]
 
-urlpatterns = format_suffix_patterns(urlpatterns)
+# urlpatterns = format_suffix_patterns(urlpatterns)
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

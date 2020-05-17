@@ -1,7 +1,8 @@
 from rest_framework import permissions
 
 
-class ProjectOwner(permissions.BasePermission):
+
+class IsTeamMember(permissions.BasePermission):
 
     def has_object_permission(self, request, view, obj):
         project = obj
@@ -15,11 +16,11 @@ class ProjectOwner(permissions.BasePermission):
             else:
                 return False
 
-class IssueOwner(permissions.BasePermission):
+class IsOwner(permissions.BasePermission):
 
     def has_object_permission(self, request, view, obj):
-        issue = obj
-        creater = issue.creater
+        model = obj
+        creater = model.creater
         user = request.user
         if request.method in permissions.SAFE_METHODS:
             return True
@@ -29,19 +30,6 @@ class IssueOwner(permissions.BasePermission):
             else:
                 return False
 
-class CommentOwner(permissions.BasePermission):
-
-    def has_object_permission(self, request, view, obj):
-        comment = obj
-        creater = comment.creater
-        user = request.user
-        if request.method in permissions.SAFE_METHODS:
-            return True
-        else:
-            if user.id == creater:
-                return True
-            else:
-                return False
 
 class IsUserBossOrNot(permissions.BasePermission):
     def has_permission(self, request, view):
