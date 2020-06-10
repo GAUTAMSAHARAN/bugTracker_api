@@ -7,6 +7,8 @@ class IsTeamMember(permissions.BasePermission):
         project = obj
         members = project.memebers.all()
         user = request.user
+        print(user.id)
+        print(members)
         if request.method in permissions.SAFE_METHODS:
             return True
         else:
@@ -20,6 +22,8 @@ class IsOwner(permissions.BasePermission):
         model = obj
         creater = model.creater
         user = request.user
+        print(user.id)
+        print(creater.id)
         if request.method in permissions.SAFE_METHODS:
             return True
         else:
@@ -32,3 +36,7 @@ class IsOwner(permissions.BasePermission):
 class IsUserBossOrNot(permissions.BasePermission):
     def has_permission(self, request, view):
         return request.user.boss
+
+class CustomPermission(permissions.BasePermission):
+    def has_permission(self, request, view):
+        return bool(request.user and request.user.is_authenticated and request.user.disable == False)

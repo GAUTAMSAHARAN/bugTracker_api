@@ -9,6 +9,7 @@ router = DefaultRouter()
 router.register(r'issues', views.IssueViewSet)
 router.register(r'projects', views.ProjectViewSet)
 router.register(r'users', views.UserViewSet)
+router.register(r'comments', views.CommentViewSet)
 
 
 urlpatterns = [

@@ -13,6 +13,7 @@ class User(AbstractUser):
     mobile = models.CharField(max_length=12, validators=[MinLengthValidator(12)])
     boss = models.BooleanField(default=False)#admin at the site level
     enroll = models.IntegerField()
+    disable = models.BooleanField(default=False)
     gitProfile = models.URLField(
         max_length=300,
         blank=True
@@ -59,7 +60,7 @@ class Issue(models.Model):
     important = models.BooleanField(default=False)
     type = models.CharField(max_length=50, choices=TYPE_CHOICES, default='BACK')
     status = models.CharField(max_length=50, choices=STATUS_CHOICES, default='P')
-    upload_time = datetime.datetime.now()
+    upload_time = models.DateTimeField(auto_now_add = True)
 
     project = models.ForeignKey(Project, related_name = 'issues', on_delete=models.CASCADE)
     creater = models.ForeignKey(User, related_name = 'issues', on_delete=models.CASCADE)
@@ -67,7 +68,7 @@ class Issue(models.Model):
 #comment models
 class Comment(models.Model):
     body = RichTextField()
-    upload_time = datetime.datetime.now()
+    upload_time = models.DateTimeField(auto_now_add = True)
 
     issues = models.ForeignKey(Issue, related_name = 'comments', on_delete=models.CASCADE)
     creater = models.ForeignKey(User, related_name = 'Comments', on_delete=models.CASCADE)
