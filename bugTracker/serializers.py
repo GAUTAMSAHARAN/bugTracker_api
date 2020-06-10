@@ -8,9 +8,17 @@ class ImageSerializers(serializers.ModelSerializer):
         fields = ['image']
 
 class IssueSerializers(serializers.ModelSerializer):
+
+    projectName = serializers.SerializerMethodField('get_project_name')
+
     class Meta:
         model = models.Issue
-        fields = ['id','title', 'wiki', 'important', 'type', 'status', 'upload_time', 'creater', 'project']
+        fields = ['id','title', 'wiki', 'important', 'type', 'status', 'upload_time', 'creater', 'project', 'projectName']
+
+    def get_project_name(self, issue):
+        project = issue.project.title
+        return project
+
 
 class ProjectSerializers(serializers.ModelSerializer):  #also works for projectDetail view
     class Meta:
