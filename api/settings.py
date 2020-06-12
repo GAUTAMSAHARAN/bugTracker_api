@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'djrichtextfield',
     'django_filters',
     'corsheaders',
+    'channels',
     'rest_framework.authtoken',
 ]
 
@@ -57,6 +58,8 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
 ]
+
+
 
 ROOT_URLCONF = 'api.urls'
 
@@ -77,6 +80,16 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'api.wsgi.application'
+ASGI_APPLICATION = 'api.routing.application'
+
+CHANNEL_LAYERS = {
+    'default' : {
+        'BACKEND' : 'channels_redis.core.RedisChannelLayer',
+        'config' : {
+            'hosts' : [('localhost', 6379)],
+        }
+    }
+}
 
 REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': (
