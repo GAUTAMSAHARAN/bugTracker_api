@@ -27,9 +27,11 @@ class IsOwner(permissions.BasePermission):
         if request.method in permissions.SAFE_METHODS:
             return True
         else:
-            if user.id == creater:
+            if user.id == creater.id:
+                print('true')
                 return True
             else:
+                print('false')
                 return False
 
 

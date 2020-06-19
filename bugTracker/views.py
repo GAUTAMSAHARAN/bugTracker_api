@@ -25,7 +25,7 @@ class IssueViewSet(viewsets.ModelViewSet):
     queryset = models.Issue.objects.all()
     serializer_class = serializers.IssueSerializers
     filter_backends = (filters.DjangoFilterBackend, OrderingFilter,)
-    filterset_fields = ('important', 'creater', 'type', 'status',)
+    filterset_fields = ('important', 'creater', 'type', 'status', 'project')
 
     permission_classes_by_action = {'create': [AllowAny],
                                     'list': [AllowAny],
@@ -66,7 +66,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
     __base_fields = ('creater__id','memebers__id',)
     search_fields = __base_fields
 
-    permission_classes_by_action = {'create': [CustomPermission],
+    permission_classes_by_action = {'create': [AllowAny],
                                     'list': [AllowAny],
                                     'update': [AllowAny],
                                     'destroy': [AllowAny],
@@ -150,6 +150,27 @@ class UserViewSet(mixins.ListModelMixin,mixins.RetrieveModelMixin,mixins.UpdateM
             response = self.login(user, response, user_data)
 
         return HttpResponse(response)
+ 
+    @action(methods=["POST"], detail=False, url_name="cookielogin", url_path="cookielogin")   
+    def cookieLogIn(self, request):
+        try:
+            token = request.data["code"]
+        except KeyError:
+            return Response('error, token is missing')
+
+        try: 
+            accessToken = Token.objects.get(key=token)
+        except Token.DoesNotExist:
+            return Response('your token is not valid')
+        
+        user_data = accessToken.user
+        res = {
+            "token": token,
+            "user_data": serializers.UserSerializers(user_data).data
+        }
+        return Response(res)
+
+        
 
     def login(self, user, response, user_data):
         try:

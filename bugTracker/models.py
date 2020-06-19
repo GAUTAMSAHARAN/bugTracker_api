@@ -34,7 +34,7 @@ class User(AbstractUser):
 #project models
 class Project(models.Model):
     title = models.CharField(max_length=30)
-    desc = models.CharField(max_length=100)
+    desc = RichTextField()
     gitLink = models.URLField(
         max_length=300,
         blank=True
