@@ -83,12 +83,12 @@ WSGI_APPLICATION = 'api.wsgi.application'
 ASGI_APPLICATION = 'api.routing.application'
 
 CHANNEL_LAYERS = {
-    'default' : {
-        'BACKEND' : 'channels_redis.core.RedisChannelLayer',
-        'config' : {
-            'hosts' : [('localhost', 6379)],
-        }
-    }
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)],
+        },
+    },
 }
 
 REST_FRAMEWORK = {
@@ -170,3 +170,14 @@ DJRICHTEXTFIELD_CONFIG = {
 }
 
 AUTH_USER_MODEL = 'bugTracker.User'
+
+from bugTracker.emailSettings import *
+
+# SMTP Mail service with decouple
+EMAIL_BACKEND = emailBackend
+EMAIL_HOST = emailHost
+EMAIL_HOST_USER = userEmail
+EMAIL_HOST_PASSWORD = userPassword
+EMAIL_PORT = emailPort
+EMAIL_USE_TLS = emailTls
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
